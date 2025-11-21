@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using static System.Console;
 
 public class Conta
 {
@@ -9,7 +9,6 @@ public class Conta
     public decimal Saldo { get; set; }
     public decimal Limite { get; set; }
 
-    [JsonIgnore]
     public decimal SaldoDisponível => Saldo + Limite;
 
     public Conta(int numero, string cliente, string cpf, string senha, decimal limite = 0)
@@ -18,6 +17,38 @@ public class Conta
         Cliente = cliente;
         Cpf = cpf;
         Senha = senha;
+        Saldo = 0;
         Limite = limite;
+    }
+
+    public void Depositar(decimal valor)
+    {
+        Saldo += valor;
+    }
+
+    public void sacar(decimal valor)
+    {
+        if(valor <= 0)
+        {
+            WriteLine("\nvalor de saque inválido.");
+            return;
+        }
+        if(valor > Saldo + Limite)
+        {
+            WriteLine("\nSaldo insuficiente para saque.");
+            return;
+        }
+
+        Saldo -= valor;
+    }
+
+    public void aumentarLimite(decimal valor)
+    {
+        Limite += valor;
+    }
+
+    public void diminuirLimite(decimal valor)
+    {
+        Limite -= valor;
     }
 }

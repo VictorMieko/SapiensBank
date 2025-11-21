@@ -1,4 +1,5 @@
-﻿using static System.Console ;
+﻿using System.ComponentModel;
+using static System.Console;
 
 public class UX
 {
@@ -18,6 +19,8 @@ public class UX
         WriteLine(" [2] Listar Contas");
         WriteLine(" [3] Efetuar Saque");
         WriteLine(" [4] Efetuar Depósito");
+        WriteLine(" [5] Aumentar Limite");
+        WriteLine(" [6] Diminuir Limte");
         ForegroundColor = ConsoleColor.Red;
         WriteLine("\n [9] Sair");
         ForegroundColor = ConsoleColor.White;
@@ -30,6 +33,10 @@ public class UX
         {
             case "1": CriarConta(); break;
             case "2": MenuListarContas(); break;
+            case "3": EfetuarSaque(); break;
+            case "4": Depositar(); break;
+            case "5": AumentarLimite(); break;
+            case "6": DiminuirLimite(); break;
         }
         if (opcao != "9")
         {
@@ -68,6 +75,114 @@ public class UX
             WriteLine($" Saldo Disponível: {conta.SaldoDisponível:C}\n");
         }
         CriarRodape();
+    }
+
+    private void EfetuarSaque()
+    {
+        CriarTitulo(_titulo + " - Efetuar Saque");
+        Write(" Digite o numero da conta para saque: ");
+        if(!int.TryParse(ReadLine(), out int numeroConta))
+        {
+            CriarRodape("Numero invalido!");
+            return;
+        }
+
+        var contaAlvo = _banco.Contas.FirstOrDefault(c => c.Numero == numeroConta);
+        if(contaAlvo == null)
+        {
+            CriarRodape("Conta não encontrada.");
+            return;
+        }
+
+        Write($"\n Conta Selecionada: {contaAlvo.Cliente}");
+        Write($" Saldo Disponível: {contaAlvo.SaldoDisponível:c}");
+        Write("\n Valor a sacar: ");
+        var saque = Convert.ToDecimal(ReadLine());
+
+        contaAlvo.sacar(saque);
+
+        CriarRodape($"Saque realizado. Novo saldo: {contaAlvo.SaldoDisponível:C}");
+    }
+
+    private void Depositar()
+    {
+        CriarTitulo(_titulo + " - Efetuar Deposito");
+        Write(" Digite o numero da conta para depositar: ");
+        if(!int.TryParse(ReadLine(), out int numeroConta))
+        {
+            CriarRodape("Numero invalido!");
+            return;
+        }
+
+        var contaAlvo = _banco.Contas.FirstOrDefault(c => c.Numero == numeroConta);
+        if(contaAlvo == null)
+        {
+            CriarRodape("Conta não encontrada.");
+            return;
+        }
+
+        Write($"\n Conta Selecionada: {contaAlvo.Cliente}");
+        Write($" Saldo Disponível: {contaAlvo.SaldoDisponível:c}");
+        Write("\n Valor a depositar: ");
+        var deposito = Convert.ToDecimal(ReadLine());
+
+        contaAlvo.Depositar(deposito);
+
+        CriarRodape($"Deposito realizado. Novo saldo: {contaAlvo.SaldoDisponível:C}");
+    }
+
+    private void AumentarLimite()
+    {
+        CriarRodape(_titulo + " - Aumentar Limite");
+        Write(" Digite o numero da conta para aumentar o limite: ");
+        if(!int.TryParse(ReadLine(), out int numeroConta))
+        {
+            CriarRodape("Numero invalido");
+            return;
+        }
+
+        var contaAlvo = _banco.Contas.FirstOrDefault(c => c.Numero == numeroConta);
+        if(contaAlvo == null)
+        {
+            CriarRodape("Conta não encontrada");
+            return;
+        }
+
+        Write($"\n Conta Selecionada: {contaAlvo.Cliente}");
+        Write($" Saldo Disponível: {contaAlvo.Limite}");
+        Write("\n Valor a aumentar: ");
+        var limite = Convert.ToDecimal(ReadLine());
+
+        contaAlvo.aumentarLimite(limite);
+
+        CriarRodape($" Limite aumentado. Novo limite: {contaAlvo.Limite}");
+    }
+
+    private void DiminuirLimite()
+    {
+        CriarRodape(_titulo + " - Diminuir Limite");
+        Write(" Digite o numero da conta para diminuir o limite: ");
+        if(!int.TryParse(ReadLine(), out int numeroConta))
+        {
+            CriarRodape("Numero invalido");
+            return;
+        }
+
+        var contaAlvo = _banco.Contas.FirstOrDefault(c => c.Numero == numeroConta);
+        if(contaAlvo == null)
+        {
+            CriarRodape("Conta não encontrada");
+            return;
+        }
+
+        Write($"\n Conta Selecionada: {contaAlvo.Cliente}");
+        Write($" Saldo Disponível: {contaAlvo.Limite}");
+        Write("\n Valor a diminuir: ");
+        var limite = Convert.ToDecimal(ReadLine());
+
+        contaAlvo.diminuirLimite(limite);
+
+        CriarRodape($"Limite diminuido. Novo limite: {contaAlvo.Limite}");
     }
 
     private void CriarLinha()
